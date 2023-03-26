@@ -13,8 +13,13 @@ typedef struct args_rtbps {
   double mu;
 } args_rtbps;
 
+typedef struct args_2 {
+  double alpha;
+} args_2;
+
 int pendulum(int n, double t, double x[], double f[], void *prm);
 int ivp2(int n, double t, double x[], double f[], void *prm);
 int harmonicOscillator(int n, double t, double x[], double f[], void *prm);
 int lorenz(int n, double t, double x[], double f[], void *prm);
 int rtbp(int n, double t, double x[], double f[], void *prm);
+int exemple2(int n, double t, double x[], double f[], void *prm);

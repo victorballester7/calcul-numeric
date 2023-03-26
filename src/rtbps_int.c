@@ -3,10 +3,11 @@
 #include "../include/fields.h"
 #include "../include/flow.h"
 #include "../include/rk78.h"
+#include "../include/rtbps.h"
 
 int main(int argc, char const *argv[]) {
   double hmin = 0.01, hmax = 0.05, tol = 0.000001;
-  int np = 100, n = 6;
+  int np, n = 6;
   double x[n], t, h, T = 6;
   args_rtbps prm;
 
@@ -25,13 +26,13 @@ int main(int argc, char const *argv[]) {
     return -1;
   }
 
-  while (fscanf(input, "%lf %lf %lf %lf %lf %lf", &x[0], &x[1], &x[2], &x[3], &x[4], &x[5]) != EOF) {
+  while (fscanf(input, "%lf %lf %lf %lf %lf %lf %lf %d", &x[0], &x[1], &x[2], &x[3], &x[4], &x[5], &h, &np) != EOF) {
+    printf("numero np=%d\n", np);
     t = 0;
-    h = 0.01;
     fprintf(output, "\n\"Initial conditions: (x, y, z, vx, vy, vz, \u03BC) = (%g, %g, %g, %g, %g, %g, %g)\"\n", x[0], x[1], x[2], x[3], x[4], x[5], prm.mu);
     fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     for (int i = 0; i < np; i++) {
-      flow(&t, x, &h, T / np, hmin, hmax, tol, np, n, rtbp, &prm);
+      flow(&t, x, &h, T * 1. / np, hmin, hmax, tol, np, n, rtbps, &prm);
       fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     }
     fprintf(output, "\n");

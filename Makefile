@@ -25,8 +25,8 @@ TOL=0.000001
 SIGMA=10
 RHO=28
 BETA=2.6
-TF=10
-NT=100
+TF=50
+NT=5000
 
 COMPILE=$(CC) $(CC_FLAGS) -I$(INCLUDE) $^ -o $(BIN)/$@ $(LIBRARIES)
 EXECUTE=./$(BIN)/$^
@@ -55,10 +55,11 @@ runFlowSample: flowSample
 	@$(EXECUTE)
 
 plotLorenz: runLorenz
-	@$(GNUPLOT) $(GNUPLOT_FLAGS) $(PLOT)/mylorenz.gnu
+	@$(GNUPLOT) $(GNUPLOT_FLAGS) $(PLOT)/lorenz.gnu
 
 runLorenz: lorenz_int
 	@$(EXECUTE) $(SIGMA) $(RHO) $(BETA) $(TF) $(NT)
+
 
 # $^ evaluates to $(SRC)/rf_pendulum.c $(SRC)/pendulum.c $(SRC)/rk78.c
 # S@ evaluates to rf_pendulum
@@ -72,7 +73,10 @@ flowSample: $(SRC)/flow_sample.c $(SRC)/flow.c $(SRC)/fields.c $(SRC)/rk78.c
 lorenz_int: $(SRC)/lorenz_int.c $(SRC)/flow.c $(SRC)/fields.c $(SRC)/rk78.c
 	@$(COMPILE)
 
-rtbps_int: $(SRC)/rtbps_int.c $(SRC)/flow.c $(SRC)/fields.c $(SRC)/rk78.c
+rtbps_int: $(SRC)/rtbps_int.c $(SRC)/flow.c $(SRC)/fields.c $(SRC)/rk78.c $(SRC)/rtbps.c
+	@$(COMPILE)
+
+ex2: $(SRC)/flow.c $(SRC)/fields.c $(SRC)/rk78.c $(SRC)/ex2.c
 	@$(COMPILE)
 
 clean:

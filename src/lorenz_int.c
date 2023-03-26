@@ -31,7 +31,7 @@ int main(int argc, char const *argv[]) {
     fprintf(output, "\n\"Initial conditions: (x, y, z, \u03C3, \u03C1, \u03B2) = (%g, %g, %g, %g, %g, %g)\"\n", x[0], x[1], x[2], prm.sigma, prm.rho, prm.beta);
     fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     for (int i = 0; i < np; i++) {
-      flow(&t, x, &h, T / np, hmin, hmax, tol, np, n, lorenz, &prm);
+      flow(&t, x, &h, T * 1. / np, hmin, hmax, tol, np, n, lorenz, &prm);
       fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     }
     fprintf(output, "\n");
