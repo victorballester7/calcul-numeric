@@ -12,7 +12,7 @@ int main(int argc, char const *argv[]) {
 
   // check correct execution
   if (argc != 6 || sscanf(argv[1], "%lf", &prm.sigma) != 1 || sscanf(argv[2], "%lf", &prm.rho) != 1 || sscanf(argv[3], "%lf", &prm.beta) != 1 || sscanf(argv[4], "%lf", &T) != 1 || sscanf(argv[5], "%d", &np) != 1) {
-    printf("Execute as ./bin/lorenz_int sigma rho beta tf nt\n");
+    printf("Execute as ./bin/lorenz sigma rho beta tf nt\n");
     return -1;
   }
 

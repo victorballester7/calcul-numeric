@@ -11,13 +11,12 @@ int flow(double *t, double x[], double *h, double T, double hmin, double hmax, d
   while (*t < t0 + T && count < maxNumSteps) {
     if (*t + *h > t0 + T)
       *h = t0 + T - *t;
-    rk78(t, x, h, hmin, hmax, tol, n, field, prm);
-    // printf("%lf --> %lf\n", *t, x[0]);
+    if (rk78(t, x, h, hmin, hmax, tol, n, field, prm)) return 1;
     count++;
   }
-  if (*t < t0 + T - tol) {  // this means count = maxNumSteps
-    return -1;
-  } else {
+  if (count == maxNumSteps)
+    return 1;  // this means count = maxNumSteps
+  else {
     *t = t0 + T;
     return 0;
   }

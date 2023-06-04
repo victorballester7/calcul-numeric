@@ -19,6 +19,8 @@ set key outside bottom center;
 # define the data file and block separator
 datafile = 'data/output_lorenz.txt'
 
+unset key;
+
 # count the number of blocks in the file
 stats datafile using 2:3 nooutput
 nblocks = STATS_blocks

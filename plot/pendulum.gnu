@@ -12,7 +12,8 @@ set linetype 7 linecolor rgb "black"
 
 set xlabel 'x'; 
 set ylabel 'v'; 
-set key outside bottom center; 
+set key outside bottom center;  
+set key Left # aligns the text of the legend to the left
 
 # define the data file and block separator
 datafile = 'data/output_pendulum.txt'
@@ -30,4 +31,4 @@ nblocks = STATS_blocks
 #   if (i < nblocks-1) { plotcmd = sprintf("%s %s", plotcmd, separator) }
 # }
 # plot plotcmd
-plot for[i=0:nblocks-1] datafile index i using 2:3 title columnheader(1) pointtype 7 pointsize 1 linecolor i+1
+plot for[i=1:nblocks-1] datafile index i using 2:3 title columnheader(1) with lines linecolor i+1 linewidth 2, datafile index 0 using 2:3 title columnheader(1) pointtype 7 pointsize 0.5 linecolor 1
