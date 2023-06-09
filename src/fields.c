@@ -87,65 +87,63 @@ int exemple2(int n, double t, double x[], double f[], void *prm) {
 #define W x[5]
 
 int rtbps(int n, double t, double *x, double *f, void *prm) {
-  double mu, xmmu, xmmup1, y, z, y2, z2, td1, td2, rh12, rh22, rh1, rh2,
-      rh13, rh23, pot3, potx3;
+  double mu, x_mu, x_mu_1, y, z, y2, z2, temp1, temp2;
+  double rho1_2, rho2_2, rho1, rho2, rho1_3, rho2_3, pot3, potx3;
   mu = *((double *)prm);
-  xmmu = x[0] - MU;
-  xmmup1 = xmmu + 1;
+  x_mu = x[0] - MU;
+  x_mu_1 = x_mu + 1;
   y = x[1];
   y2 = y * y;
   z = x[2];
   z2 = z * z;
-  td1 = y2 + z2;
-  rh12 = xmmu * xmmu + td1;
-  rh22 = xmmup1 * xmmup1 + td1;
-  rh1 = sqrt(rh12);
-  rh2 = sqrt(rh22);
-  rh13 = rh12 * rh1;
-  rh23 = rh22 * rh2;
-  td1 = -M1 / rh13;
-  td2 = -M2 / rh23;
-  pot3 = td1 + td2;
-  potx3 = td1 * xmmu + td2 * xmmup1;
-  /* Equacions */
+  temp1 = y2 + z2;
+  rho1_2 = x_mu * x_mu + temp1;
+  rho2_2 = x_mu_1 * x_mu_1 + temp1;
+  rho1 = sqrt(rho1_2);
+  rho2 = sqrt(rho2_2);
+  rho1_3 = rho1_2 * rho1;
+  rho2_3 = rho2_2 * rho2;
+  temp1 = -M1 / rho1_3;
+  temp2 = -M2 / rho2_3;
+  pot3 = temp1 + temp2;
+  potx3 = temp1 * x_mu + temp2 * x_mu_1;
+  // Equations of the system
   f[0] = U;
   f[1] = V;
   f[2] = W;
   f[3] = 2 * V + x[0] + potx3;
   f[4] = -2 * U + y * (1 + pot3);
   f[5] = z * pot3;
-  /* Variacionals primeres */
+  // Variational equations
   if (n > N) {
-#define VARX(i, j) x[(1 + (j)) * N + (i)]
-#define VARF(i, j) f[(1 + (j)) * N + (i)]
-    double pot5, potx5, omgxx, omgxy, omgxz, omgyy, omgyz, omgzz;
-    int j;
-    td1 = M1 / (rh13 * rh12);
-    td2 = M2 / (rh23 * rh22);
-    pot5 = td1 + td2;
-    td1 *= xmmu;
-    td2 *= xmmup1;
-    potx5 = td1 + td2;
-    omgxx = 1 + pot3 + 3 * (td1 * xmmu + td2 * xmmup1);
-    omgxy = 3 * y * potx5;
-    omgxz = 3 * z * potx5;
-    omgyy = 1 + pot3 + 3 * y2 * pot5;
-    omgyz = 3 * y * z * pot5;
-    omgzz = pot3 + 3 * z2 * pot5;
-    for (j = 0; j < N; j++) {
-      VARF(0, j) = VARX(3, j);
-      VARF(1, j) = VARX(4, j);
-      VARF(2, j) = VARX(5, j);
-      VARF(3, j) = omgxx * VARX(0, j) + omgxy * VARX(1, j) + omgxz * VARX(2, j) + 2 * VARX(4, j);
-      VARF(4, j) = omgxy * VARX(0, j) + omgyy * VARX(1, j) + omgyz * VARX(2, j) - 2 * VARX(3, j);
-      VARF(5, j) = omgxz * VARX(0, j) + omgyz * VARX(1, j) + omgzz * VARX(2, j);
+#define A0(i, j) x[N + (i)*N + (j)]  // initial matrix for the variational equations
+#define Af(i, j) f[N + (i)*N + (j)]  // final matrix for the variational equations = Df * A
+    double sum_pow5, sum_x_pow5, Omega_xx, Omega_xy, Omega_xz, Omega_yy, Omega_yz, Omega_zz;
+    temp1 = M1 / (rho1_3 * rho1_2);
+    temp2 = M2 / (rho2_3 * rho2_2);
+    sum_pow5 = temp1 + temp2;
+    temp1 *= x_mu;
+    temp2 *= x_mu_1;
+    sum_x_pow5 = temp1 + temp2;
+    Omega_xx = 1 + pot3 + 3 * (temp1 * x_mu + temp2 * x_mu_1);
+    Omega_xy = 3 * y * sum_x_pow5;
+    Omega_xz = 3 * z * sum_x_pow5;
+    Omega_yy = 1 + pot3 + 3 * y2 * sum_pow5;
+    Omega_yz = 3 * y * z * sum_pow5;
+    Omega_zz = pot3 + 3 * z2 * sum_pow5;
+    for (int j = 0; j < N; j++) {  // we fill the matrix Af by columns
+      Af(0, j) = A0(3, j);
+      Af(1, j) = A0(4, j);
+      Af(2, j) = A0(5, j);
+      Af(3, j) = Omega_xx * A0(0, j) + Omega_xy * A0(1, j) + Omega_xz * A0(2, j) + 2 * A0(4, j);
+      Af(4, j) = Omega_xy * A0(0, j) + Omega_yy * A0(1, j) + Omega_yz * A0(2, j) - 2 * A0(3, j);
+      Af(5, j) = Omega_xz * A0(0, j) + Omega_yz * A0(1, j) + Omega_zz * A0(2, j);
     }
-#undef VARX
-#undef VARF
+#undef A0
+#undef Af
   }
   return 0;
 }
-
 #undef W
 #undef V
 #undef U

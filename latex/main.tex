@@ -11,6 +11,9 @@
 \usepackage{subcaption}
 \usepackage{xcolor}
 \usepackage{listings} 
+\usepackage{parskip}
+
+\allowdisplaybreaks % allow page breaks in align environment
 
 \newcommand{\NN}{\ensuremath{\mathbb{N}}} % set of natural numbers
 \newcommand{\ZZ}{\ensuremath{\mathbb{Z}}} % set of integers
@@ -151,7 +154,7 @@ Abans de tot, per a el correcte ús del codi, cal donar permisos d'execució al 
 chmod +x execute.sh
 \end{lstlisting}
 \section*{Part 1}
-Considerem el sistema diferencial que modela el moviment d'un pèndol amb fregament i forçat.
+Considerem el sistema diferencial que modela el moviment d'un pèndol forçat i amb fregament.
 $$
   \begin{cases}
     \dot{r} = v \\
@@ -165,9 +168,10 @@ on $\mu,\omega\geq 0$. Si executem el codi amb
 obtindrem el següent gràfic, on es mostren diverses òrbites del sistema:
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\linewidth]{Images/pendulum.pdf}
+  \includegraphics[width=0.69\linewidth]{Images/pendulum.pdf}
   \caption{Òrbites del sistema del pèndol amb $\mu=0$ i $\omega=0$ partint de diversos punts inicials.}
 \end{figure}
+
 Ara considerem els següents problemes d'equacions diferencials:
 $$
   \begin{cases}
@@ -184,7 +188,7 @@ Les solucions d'aquests dos problemes són fàcils d'obtenir i venen donades res
 $$
   y(t)=t^2\qquad x(t)=\cos t + \sin t
 $$
-L'objectiu d'aquesta part de la pràctica era calcular el flux d'aquests dos sistemes diferencials en el punt $t=2$ i $t=1$, respectivament. Executant
+L'objectiu d'aquesta part de la pràctica és calcular el flux d'aquests dos sistemes diferencials en el punt $t=2$ i $t=1$, respectivament. Executant
 \begin{lstlisting}[language=Bash]
 ./execute.sh flow_sample
 \end{lstlisting}
@@ -208,6 +212,7 @@ obtindrem el següent gràfic:
   \includegraphics[width=0.7\linewidth]{Images/lorenz.pdf}
   \caption{Òrbita del sistema de Lorenz partint de $(1.1,0.36,3.14)$.}
 \end{figure}
+
 Finalment, considerem el problema restringit dels tres cossos. En coordenades sinòdiques, el sistema ve donat per:
 $$
   \begin{cases}
@@ -256,7 +261,7 @@ obtindrem els següents erros entre els valors numèrics de les derivades del fl
 \end{align*}
 on el $\vf\phi=(\phi^1,\phi^2)$ és el flux del sistema.
 \section*{Part 4}
-En aquesta última part de la pràctica l'objectiu és trobar les maniobres $\Delta \vf{v}_0$ i $\Delta \vf{v}_1$ que permeten passar d'una posició i velocitat inicials ${(\vf{r}_0,\vf{v}_0)}^\mathrm{T}$ donades a una posició i velocitat finals ${(\vf{r}_f,\vf{v}_f)}^\mathrm{T}$ també donades en un temps $\Delta t$. Més precisament:
+En aquesta última part de la pràctica l'objectiu és trobar les maniobres $\Delta \vf{v}_0$ i $\Delta \vf{v}_1$ que permeten passar d'una posició i velocitat inicials ${(\vf{r}_0,\vf{v}_0)}^\mathrm{T}$ donades a una posició i velocitat finals ${(\vf{r}_f,\vf{v}_f)}^\mathrm{T}$ també donades, en un temps $\Delta t$. Més precisament, volem trobar maniobres que permetin fer el següent:
 \begin{align*}
   \begin{pmatrix}
     \vf{r}_0 \\
@@ -282,9 +287,9 @@ En aquesta última part de la pràctica l'objectiu és trobar les maniobres $\De
   \end{pmatrix}+\begin{pmatrix}
     \vf{0} \\
     \Delta\vf{v}_1
-  \end{pmatrix}\right)\\
+  \end{pmatrix}\right)
 \end{align*}
-Per tant, cal trobar $\Delta\vf{v}={(\Delta\vf{v}_0,\Delta\vf{v}_1)}^\mathrm{T}$ tal que anu\lgem i la funció:
+Per tant, cal trobar $\Delta\vf{v}={(\Delta\vf{v}_0,\Delta\vf{v}_1)}^\mathrm{T}$ tal que anu\lgem in la funció:
 $$
   \vf{G}(\Delta\vf{v}) = \vf\phi_{\Delta t/2}\left(\phi_{\Delta t/2}\begin{pmatrix}
     \vf{r}_0 \\
@@ -297,7 +302,7 @@ $$
     \vf{v}_f
   \end{pmatrix}
 $$
-Això ho resoldrem mitjançant el mètode de Newton multidimensional. Per a fer-ho, necessitem calcular la matriu jacobiana de $\vf{G}$, que ho podrem fer a partir de les variacionals del flux.
+Això ho resoldrem mitjançant el mètode de Newton multidimensional. Per a fer-ho, necessitem calcular la matriu jacobiana de $\vf{G}$, que ho podrem fer a partir de les variacionals del flux. Per a trobar els iterats de Newton, usarem el mètode de Gauss per resoldre el sistema lineal associat.
 
 Comencem primer amb un problema d'exemple, el del pèndol. Suposem que $r_0=1$, $v_0=0$, $r_f=0$, $v_f=-\sqrt{2(1-\cos 1)}
   \simeq -0.95885108$ i $\Delta t=\pi/2$. Si executem la instrucció
@@ -307,9 +312,44 @@ Comencem primer amb un problema d'exemple, el del pèndol. Suposem que $r_0=1$, 
 obtindrem el següent resultat:
 $$
   \Delta\vf{v} = \begin{pmatrix}
-    -0.0926981627735690 \\
-    0.0062078732568581
+    -0.0926981627735679 \\
+    0.0062078732568572
   \end{pmatrix}
 $$
 amb una tolerància de $10^{-12}$.
+
+Finalment, si executem la instrucció
+\begin{lstlisting}[language=Bash]
+./execute.sh cmani_rtbp
+\end{lstlisting}
+obtindrem que les maniobres necessàries per passar del punt inicial
+$$
+  \begin{pmatrix}
+    {\vf{r}_0}^\mathrm{T} \\
+    {\vf{v}_0}^\mathrm{T}
+  \end{pmatrix} =
+  \begin{pmatrix}
+    -0.8457719086638686 & 0.05934028672713117 & 0                   \\
+    0.03769526738828564 & 0.01515062570613701 & 0.04577799834681743
+  \end{pmatrix}
+$$ al punt final
+$$
+  \begin{pmatrix}
+    {\vf{r}_f}^\mathrm{T} \\
+    {\vf{v}_f}^\mathrm{T}
+  \end{pmatrix}=
+  \begin{pmatrix}
+    -0.8518851062423166 & 0.06132143191581388 & 0.0005120725158794939 \\
+    0.0206128163364461  & 0.01844596878578819 & 0.04641615142301939
+  \end{pmatrix}
+$$ en un temps $\Delta t = 2.746177778348061$ són:
+$$
+  \begin{pmatrix}
+    {\Delta\vf{v}_0}^\mathrm{T} \\
+    {\Delta\vf{v}_1}^\mathrm{T}
+  \end{pmatrix}=\begin{pmatrix}
+    -8.326184791197963\times10^{-6} & -1.285657562239232\times10^{-5} & -1.545884623736697\times10^{-6} \\
+    -5.989126097485234\times10^{-6} & -1.071156972197014\times10^{-5} & -1.809272933729815\times10^{-6}
+  \end{pmatrix}
+$$
 \end{document}

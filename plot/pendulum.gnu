@@ -14,6 +14,11 @@ set xlabel 'x';
 set ylabel 'v'; 
 set key outside bottom center;  
 set key Left # aligns the text of the legend to the left
+set key font ",12" # sets the font face and size of the legend text ("face,size")
+set ytics font ",12"
+set xtics font ",12"
+set xlabel font ",12"
+set ylabel font ",12"
 
 # define the data file and block separator
 datafile = 'data/output_pendulum.txt'

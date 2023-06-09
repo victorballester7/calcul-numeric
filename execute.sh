@@ -66,8 +66,8 @@ case $1 in
     make $BIN/$ex44
     if [ -z "$2" ] && [ -z "$3" ] && [ -z "$4" ]; then
       echo "No arguments provided. Use the syntax: ./execute.sh $ex44 <mu> <tol_newton> <maxit_newton>"
-      echo "Executing the default command: ./$BIN/$ex44 1.215058560962404e-2 1e-12 100"
-      ./$BIN/$ex44 1.215058560962404e-2 1e-12 100
+      echo "Executing the default command: ./$BIN/$ex44 1.215058560962404e-2 1e-12 10"
+      ./$BIN/$ex44 1.215058560962404e-2 1e-12 10
     else
       ./$BIN/$ex44 $2 $3 $4
     fi
