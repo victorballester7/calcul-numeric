@@ -4,7 +4,7 @@
 #include "../include/flow.h"
 #include "../include/rk78.h"
 
-int main(int argc, char const *argv[]) {
+int main(int argc, char const* argv[]) {
   double hmin = 0.01, hmax = 0.05, tol = 0.000001;
   int np, n = 6;
   double x[n], t, h, T = 6;
@@ -36,7 +36,5 @@ int main(int argc, char const *argv[]) {
     fprintf(output, "\n");
   }
 
-  fclose(input);
-  fclose(output);
   return 0;
 }
