@@ -6,12 +6,12 @@
 
 int main(int argc, char const *argv[]) {
   double hmin = 0.01, hmax = 0.05, tol = 0.000001;
-  int np, n = 3;
+  int nt, numMax = 100, n = 3;
   double x[n], t, h, T;
   args_lorenz prm;
 
   // check correct execution
-  if (argc != 6 || sscanf(argv[1], "%lf", &prm.sigma) != 1 || sscanf(argv[2], "%lf", &prm.rho) != 1 || sscanf(argv[3], "%lf", &prm.beta) != 1 || sscanf(argv[4], "%lf", &T) != 1 || sscanf(argv[5], "%d", &np) != 1) {
+  if (argc != 6 || sscanf(argv[1], "%lf", &prm.sigma) != 1 || sscanf(argv[2], "%lf", &prm.rho) != 1 || sscanf(argv[3], "%lf", &prm.beta) != 1 || sscanf(argv[4], "%lf", &T) != 1 || sscanf(argv[5], "%d", &nt) != 1) {
     printf("Execute as ./bin/lorenz sigma rho beta tf nt\n");
     return -1;
   }
@@ -30,8 +30,8 @@ int main(int argc, char const *argv[]) {
     h = 0.01;
     fprintf(output, "\n\"Initial conditions: (x, y, z, \u03C3, \u03C1, \u03B2) = (%g, %g, %g, %g, %g, %g)\"\n", x[0], x[1], x[2], prm.sigma, prm.rho, prm.beta);
     fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
-    for (int i = 0; i < np; i++) {
-      flow(&t, x, &h, T * 1. / np, hmin, hmax, tol, np, n, lorenz, &prm);
+    for (int i = 0; i < nt; i++) {
+      flow(&t, x, &h, T * 1. / nt, hmin, hmax, tol, numMax, n, lorenz, &prm);
       fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     }
     fprintf(output, "\n");

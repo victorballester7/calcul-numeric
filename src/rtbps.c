@@ -6,7 +6,7 @@
 
 int main(int argc, char const* argv[]) {
   double hmin = 0.01, hmax = 0.05, tol = 0.000001;
-  int np, n = 6;
+  int numMax = 100, np, n = 6;
   double x[n], t, h, T = 6;
   args_rtbps prm;
 
@@ -30,7 +30,7 @@ int main(int argc, char const* argv[]) {
     fprintf(output, "\n\"Initial conditions: (x, y, z, vx, vy, vz, \u03BC) = (%g, %g, %g, %g, %g, %g, %g)\"\n", x[0], x[1], x[2], x[3], x[4], x[5], prm.mu);
     fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     for (int i = 0; i < np; i++) {
-      flow(&t, x, &h, T * 1. / np, hmin, hmax, tol, np, n, rtbps, &prm);
+      flow(&t, x, &h, T * 1. / np, hmin, hmax, tol, numMax, n, rtbps, &prm);
       fprintf(output, "%lf %lf %lf %lf\n", t, x[0], x[1], x[2]);
     }
     fprintf(output, "\n");
